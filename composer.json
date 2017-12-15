@@ -1,0 +1,30 @@
+{
+    "name": "xoptov/trading-core",
+    "description": "This is a core library for automation trading platform.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maksim Khortov",
+            "email": "xoptov@mail.ru",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Xoptov\\TradingCore\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Xoptov\\TradingCore\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "myclabs/deep-copy": "^1.7"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.4"
+    }
+}
