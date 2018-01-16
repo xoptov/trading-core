@@ -4,6 +4,9 @@ namespace Xoptov\TradingCore\Model;
 
 class CurrencyPair
 {
+	/** @var mixed */
+	private $id;
+
     /** @var Currency */
     private $base;
 
@@ -12,13 +15,24 @@ class CurrencyPair
 
     /**
      * CurrencyPair constructor.
+     *
+     * @param integer $id
      * @param Currency $base
      * @param Currency $quote
      */
-    public function __construct(Currency $base, Currency $quote)
+    public function __construct($id, Currency $base, Currency $quote)
     {
+    	$this->id = $id;
         $this->base = $base;
         $this->quote = $quote;
+    }
+
+	/**
+	 * @return mixed
+	 */
+    public function getId()
+    {
+    	return $this->id;
     }
 
     /**
