@@ -2,29 +2,37 @@
 
 namespace Xoptov\TradingCore;
 
+use SplDoublyLinkedList;
 use Xoptov\TradingCore\Model\Rate;
 use Xoptov\TradingCore\Model\Order;
+use Xoptov\TradingCore\Model\CurrencyPair;
 use Xoptov\TradingCore\Exception\UnknownTypeException;
 
 class OrderBook
 {
-    /** @var \SplDoublyLinkedList */
+	/** @var CurrencyPair */
+	private $currencyPair;
+
+    /** @var SplDoublyLinkedList */
     private $asks;
 
-    /** @var \SplDoublyLinkedList */
+    /** @var SplDoublyLinkedList */
     private $bids;
 
 	/**
 	 * OrderBook constructor.
+	 *
+	 * @param CurrencyPair $currencyPair
 	 */
-    public function __construct()
+    public function __construct(CurrencyPair $currencyPair)
     {
-        $this->asks = new \SplDoublyLinkedList();
-        $this->bids = new \SplDoublyLinkedList();
+    	$this->currencyPair = $currencyPair;
+        $this->asks = new SplDoublyLinkedList();
+        $this->bids = new SplDoublyLinkedList();
     }
 
 	/**
-     * @return \SplDoublyLinkedList
+     * @return SplDoublyLinkedList
      */
     public function getAsks()
     {
@@ -34,7 +42,7 @@ class OrderBook
     }
 
     /**
-     * @return \SplDoublyLinkedList
+     * @return SplDoublyLinkedList
      */
     public function getBids()
     {
@@ -149,15 +157,15 @@ class OrderBook
     public function clean()
     {
         unset($this->asks);
-        $this->asks = new \SplDoublyLinkedList();
+        $this->asks = new SplDoublyLinkedList();
 
         unset($this->bids);
-        $this->bids = new \SplDoublyLinkedList();
+        $this->bids = new SplDoublyLinkedList();
     }
 
 	/**
 	 * @param $type
-	 * @return \SplDoublyLinkedList
+	 * @return SplDoublyLinkedList
 	 */
     private function determine($type)
     {
