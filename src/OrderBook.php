@@ -164,6 +164,14 @@ class OrderBook
     }
 
 	/**
+	 * @return mixed
+	 */
+    public function getCurrencyPairId()
+    {
+    	return $this->currencyPair->getId();
+    }
+
+	/**
 	 * @param $type
 	 * @return SplDoublyLinkedList
 	 */

@@ -6,7 +6,9 @@ use SplSubject;
 use SplObserver;
 use DeepCopy\DeepCopy;
 use SplDoublyLinkedList;
+use Xoptov\TradingCore\Exception\ObserverDetachException;
 use Xoptov\TradingCore\Model\CurrencyPair;
+use Xoptov\TradingCore\Exception\ObserverAttachException;
 
 class Channel implements SplSubject
 {
@@ -41,6 +43,7 @@ class Channel implements SplSubject
 
 	/**
 	 * @param SplObserver $observer
+	 *
 	 * @return bool
 	 */
 	public function attach(SplObserver $observer)
@@ -62,6 +65,7 @@ class Channel implements SplSubject
 
 	/**
 	 * @param SplObserver $observer
+	 *
 	 * @return bool
 	 */
 	public function detach(SplObserver $observer)
@@ -111,10 +115,26 @@ class Channel implements SplSubject
 	}
 
 	/**
+	 * @return CurrencyPair
+	 */
+	public function getCurrencyPairId()
+	{
+		return $this->currencyPair->getId();
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getEvent()
 	{
 		return $this->event;
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getSubscribersCount()
+	{
+		return $this->subscribers->count();
 	}
 }
