@@ -6,9 +6,13 @@ use SplSubject;
 use SplObserver;
 use DeepCopy\DeepCopy;
 use SplDoublyLinkedList;
+use Xoptov\TradingCore\Model\CurrencyPair;
 
 class Channel implements SplSubject
 {
+    /** @var CurrencyPair */
+    private $currencyPair;
+
 	/** @var string */
 	private $event;
 
@@ -24,10 +28,12 @@ class Channel implements SplSubject
 	/**
 	 * Channel constructor.
 	 *
+     * @param CurrencyPair $currencyPair
 	 * @param string $event
 	 */
-	public function __construct($event)
+	public function __construct(CurrencyPair $currencyPair, $event)
 	{
+	    $this->currencyPair = $currencyPair;
 		$this->event = $event;
 		$this->copier = new DeepCopy();
 		$this->subscribers = new SplDoublyLinkedList();

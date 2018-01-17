@@ -4,6 +4,9 @@ namespace Xoptov\TradingCore\Model;
 
 class Currency
 {
+    /** @var int */
+    private $id;
+
     /** @var string */
     private $symbol;
 
@@ -12,13 +15,24 @@ class Currency
 
     /**
      * Currency constructor.
+     *
+     * @param int $id
      * @param string $symbol
      * @param string $name
      */
-    public function __construct($symbol, $name)
+    public function __construct($id, $symbol, $name)
     {
+        $this->id = $id;
         $this->symbol = $symbol;
         $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
