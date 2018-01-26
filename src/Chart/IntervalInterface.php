@@ -7,75 +7,75 @@ interface IntervalInterface
     /**
      * @return mixed
      */
-    public function getMin();
+    public static function getMin();
 
     /**
      * @return mixed
      */
-    public function get3Min();
+    public static function get3Min();
 
     /**
      * @return mixed
      */
-    public function get5Min();
+    public static function get5Min();
 
     /**
      * @return mixed
      */
-    public function get15Min();
+    public static function get15Min();
 
     /**
      * @return mixed
      */
-    public function getHalfHour();
+    public static function getHalfHour();
 
     /**
      * @return mixed
      */
-    public function getHour();
+    public static function getHour();
 
     /**
      * @return mixed
      */
-    public function get2Hour();
+    public static function get2Hour();
 
     /**
      * @return mixed
      */
-    public function get4Hour();
+    public static function get4Hour();
 
     /**
      * @return mixed
      */
-    public function get6Hour();
+    public static function get6Hour();
 
     /**
      * @return mixed
      */
-    public function get8Hour();
+    public static function get8Hour();
 
     /**
      * @return mixed
      */
-    public function getHalfDay();
+    public static function getHalfDay();
 
     /**
      * @return mixed
      */
-    public function getDay();
+    public static function getDay();
 
     /**
      * @return mixed
      */
-    public function get3Day();
+    public static function get3Day();
 
     /**
      * @return mixed
      */
-    public function getWeek();
+    public static function getWeek();
 
     /**
      * @return mixed
      */
-    public function getMonth();
+    public static function getMonth();
 }
