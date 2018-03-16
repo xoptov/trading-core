@@ -2,6 +2,8 @@
 
 namespace Xoptov\TradingCore\Model;
 
+use DateTime;
+
 class Order
 {
     use RateTrait;
@@ -31,7 +33,7 @@ class Order
     /** @var string */
     private $status = self::STATUS_NEW;
 
-    /** @var \DateTime */
+    /** @var DateTime */
     private $updatedAt;
 
     /**
@@ -42,9 +44,9 @@ class Order
      * @param Currency $currency
      * @param float $price
      * @param float $volume
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      */
-    public function __construct($id, $type, Active $active, Currency $currency, $price, $volume, \DateTime $createdAt)
+    public function __construct($id, $type, Active $active, Currency $currency, $price, $volume, DateTime $createdAt)
     {
     	$this->id = $id;
         $this->type = $type;
@@ -109,10 +111,10 @@ class Order
     }
 
     /**
-     * @param \DateTime $updatedAt
+     * @param DateTime $updatedAt
      * @return Order
      */
-    public function setUpdatedAt(\DateTime $updatedAt)
+    public function setUpdatedAt(DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
 
@@ -120,7 +122,7 @@ class Order
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdatedAt()
     {

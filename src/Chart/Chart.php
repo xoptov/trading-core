@@ -2,9 +2,11 @@
 
 namespace Xoptov\TradingCore\Chart;
 
+use DatePeriod;
+
 class Chart
 {
-    /** @var \DatePeriod */
+    /** @var DatePeriod */
     private $period;
 
     /** @var AbstractPeriod[] */

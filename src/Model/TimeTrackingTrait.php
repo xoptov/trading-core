@@ -2,13 +2,15 @@
 
 namespace Xoptov\TradingCore\Model;
 
+use DateTime;
+
 trait TimeTrackingTrait
 {
-    /** @var \DateTime */
+    /** @var DateTime */
     protected $createdAt;
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {

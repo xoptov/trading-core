@@ -2,6 +2,7 @@
 
 namespace Xoptov\TradingCore\Model;
 
+use LogicException;
 use Xoptov\TradingCore\Exception\UnknownTypeException;
 
 class Active
@@ -104,7 +105,7 @@ class Active
     public function addOrder(Order $order)
     {
         if ($order->getActive() !== $this) {
-            throw new \LogicException("Active in order and this active must be the same.");
+            throw new LogicException("Active in order and this active must be the same.");
         }
 
         array_push($this->orders, $order);

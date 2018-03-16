@@ -34,11 +34,12 @@ class Response
 	}
 
 	/**
+     * @param int $id
 	 * @param Currency $base
 	 * @param Currency $quote
 	 */
-	public function addCurrencyPair(Currency $base, Currency $quote)
+	public function addCurrencyPair($id, Currency $base, Currency $quote)
 	{
-		$this->currencyPairs->push(new CurrencyPair($base, $quote));
+		$this->currencyPairs->push(new CurrencyPair($id, $base, $quote));
 	}
 }

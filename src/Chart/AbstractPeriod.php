@@ -2,9 +2,11 @@
 
 namespace Xoptov\TradingCore\Chart;
 
+use DatePeriod;
+
 abstract class AbstractPeriod
 {
-    /** @var \DatePeriod */
+    /** @var DatePeriod */
     protected $period;
 
     /** @var float */
@@ -25,9 +27,9 @@ abstract class AbstractPeriod
      * @param float $close
      * @param float $high
      * @param float $low
-     * @param \DatePeriod $period
+     * @param DatePeriod $period
      */
-    public function __construct($open, $close, $high, $low, \DatePeriod $period)
+    public function __construct($open, $close, $high, $low, DatePeriod $period)
     {
         $this->open = $open;
         $this->close = $close;
@@ -69,7 +71,7 @@ abstract class AbstractPeriod
     }
 
     /**
-     * @return \DatePeriod
+     * @return DatePeriod
      */
     public function getPeriod()
     {

@@ -2,6 +2,8 @@
 
 namespace Xoptov\TradingCore\Model;
 
+use DateTime;
+
 class Trade implements TradeInterface
 {
     use RateTrait;
@@ -20,9 +22,9 @@ class Trade implements TradeInterface
      * @param string $type
      * @param string $price
      * @param string $volume
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      */
-    public function __construct($id, $type, $price, $volume, \DateTime $createdAt)
+    public function __construct($id, $type, $price, $volume, DateTime $createdAt)
     {
     	$this->id = $id;
         $this->type = $type;

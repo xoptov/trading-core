@@ -3,6 +3,7 @@
 namespace Xoptov\TradingCore\Response\Currencies;
 
 use SplDoublyLinkedList;
+use Xoptov\TradingCore\Model\Currency;
 
 class Response
 {

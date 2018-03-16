@@ -2,7 +2,11 @@
 
 namespace Xoptov\TradingCore\Response\OpenOrders;
 
+use DateTime;
 use SplDoublyLinkedList;
+use Xoptov\TradingCore\Model\Order;
+use Xoptov\TradingCore\Model\Active;
+use Xoptov\TradingCore\Model\Currency;
 
 class Response
 {
@@ -33,12 +37,15 @@ class Response
 
 	/**
 	 * @param string $id
-	 * @param float $price
-	 * @param float $volume
-	 * @return int
+     * @param string $type
+     * @param Active $active
+     * @param Currency $currency
+     * @param float $price
+     * @param float $volume
+     * @param DateTime $createdAt
 	 */
-	public function addOrder($id, $price, $volume)
+	public function addOrder($id, $type, Active $active, Currency $currency, $price, $volume, DateTime $createdAt)
 	{
-		$this->orders->push(new Order($id, $price, $volume));
+		$this->orders->push(new Order($id, $type, $active, $currency, $price, $volume, $createdAt));
 	}
 }
