@@ -50,4 +50,32 @@ class CurrencyPair
     {
         return $this->quote;
     }
+
+    /**
+     * Method for retrieving symbol for base currency.
+     *
+     * @return null|string
+     */
+    public function getBaseSymbol()
+    {
+        if ($this->base) {
+            return $this->base->getSymbol();
+        }
+
+        return null;
+    }
+
+    /**
+     * Method for retrieving symbol for quote currency.
+     *
+     * @return null|string
+     */
+    public function getQuoteSymbol()
+    {
+        if ($this->quote) {
+            return $this->quote->getSymbol();
+        }
+
+        return null;
+    }
 }
