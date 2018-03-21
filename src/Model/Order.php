@@ -10,8 +10,11 @@ class Order
 
     use TimeTrackingTrait;
 
-    /** @var mixed */
+    /** @var int */
     private $id;
+
+    /** @var mixed */
+    private $externalId;
 
     const TYPE_BID = "bid";
     const TYPE_ASK = "ask";
@@ -38,7 +41,8 @@ class Order
 
     /**
      * Order constructor.
-     * @param mixed $id
+     * @param int $id
+     * @param mixed $externalId
      * @param string $type
      * @param Active $active
      * @param Currency $currency
@@ -46,9 +50,10 @@ class Order
      * @param float $volume
      * @param DateTime $createdAt
      */
-    public function __construct($id, $type, Active $active, Currency $currency, $price, $volume, DateTime $createdAt)
+    public function __construct($id, $externalId, $type, Active $active, Currency $currency, $price, $volume, DateTime $createdAt)
     {
     	$this->id = $id;
+    	$this->externalId = $externalId;
         $this->type = $type;
         $this->active = $active;
         $this->currency = $currency;
@@ -58,12 +63,20 @@ class Order
     }
 
 	/**
-	 * @return mixed
+	 * @return int
 	 */
 	public function getId()
 	{
 		return $this->id;
 	}
+
+    /**
+     * @return mixed
+     */
+	public function getExternalId()
+    {
+        return $this->externalId;
+    }
 
     /**
      * @return string
@@ -129,5 +142,32 @@ class Order
         $updatedAt = clone $this->updatedAt;
 
         return $updatedAt;
+    }
+
+    /**
+     * Method for two order object comparison.
+     *
+     * @param Order $order
+     * @return bool
+     */
+    public function equal(Order $order)
+    {
+        return $order->getExternalId() === $this->externalId;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAsk()
+    {
+        return $this->type === Order::TYPE_ASK;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isBid()
+    {
+        return $this->type === Order::TYPE_BID;
     }
 }

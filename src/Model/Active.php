@@ -3,6 +3,8 @@
 namespace Xoptov\TradingCore\Model;
 
 use LogicException;
+use DeepCopy\DeepCopy;
+use SplDoublyLinkedList;
 use Xoptov\TradingCore\Exception\UnknownTypeException;
 
 class Active
@@ -16,21 +18,28 @@ class Active
     /** @var float */
     private $volume;
 
-    /** @var Trade[] */
-    private $trades = array();
+    /** @var SplDoublyLinkedList */
+    private $trades;
 
-    /** @var Order[] Open orders with this active */
+    /** @var SplDoublyLinkedList */
     private $orders = array();
+
+    /** @var DeepCopy */
+    private $copier;
 
 	/**
 	 * AbstractActive constructor.
+     *
 	 * @param Currency $currency
 	 * @param float $volume
 	 */
 	public function __construct(Currency $currency, $volume)
 	{
+	    $this->copier = new DeepCopy();
 		$this->currency = $currency;
 		$this->volume = $volume;
+		$this->trades = new SplDoublyLinkedList();
+		$this->orders = new SplDoublyLinkedList();
 	}
 
 	/**
@@ -62,53 +71,50 @@ class Active
      */
     public function addTrade(Trade $trade)
     {
-        array_push($this->trades, $trade);
+        $this->trades->push($trade);
 
-        if ($trade->getType() === Trade::TYPE_SELL) {
-            $this->volume -= $trade->getVolume();
-        } elseif ($trade->getType() === Trade::TYPE_BUY) {
-            $this->volume += $trade->getVolume();
-
-            $totals = array_map(function(Trade $trade) {
-                return array(
-                    "rate" => $trade->getPrice(),
-                    "volume" => $trade->getVolume()
-                );
-            }, $this->trades);
-
-            $rates = array_sum(array_column($totals, "rate"));
-            $volumes = array_sum(array_column($totals, "volume"));
-
-            $this->price = $rates / $volumes;
+        if ($trade->isSell()) {
+            $this->addSellTrade($trade);
+        } elseif ($trade->isBuy()) {
+            $this->addBuyTrade($trade);
         } else {
-            throw new UnknownTypeException("Trade type must be set.");
+            throw new UnknownTypeException("Trade type must be set to \"sell\" or \"buy\".");
         }
     }
 
     /**
-     * @return Trade[]
+     * @return SplDoublyLinkedList
      */
     public function getTrades()
     {
-        $trades = array();
-
-        foreach ($this->trades as $trade) {
-            $trades[] = clone $trade;
-        }
-
-        return $trades;
+        return $this->copier->copy($this->trades);
     }
 
     /**
-     * @param Order $order
+     * @param Order $newOrder
+     * @return bool
      */
-    public function addOrder(Order $order)
+    public function addOrder(Order $newOrder)
     {
-        if ($order->getActive() !== $this) {
-            throw new LogicException("Active in order and this active must be the same.");
+        if (!$this->equal($newOrder->getActive())) {
+            throw new LogicException("Active in order not equal with this active.");
         }
 
-        array_push($this->orders, $order);
+        /** @var Order $order */
+        foreach ($this->orders as $order) {
+            if ($newOrder->equal($order)) {
+                return false;
+            }
+        }
+
+        $this->orders->push($order);
+
+        return true;
+    }
+
+    public function removeOrder(Order $order)
+    {
+        //TODO: need implement logic for this method.
     }
 
     /**
@@ -126,26 +132,86 @@ class Active
     }
 
     /**
+     * Method return locked volume of active in open orders.
+     *
      * @return float
      */
-    public function getVolumeInOrders()
+    public function getLockedVolume()
     {
         $volume = 0.0;
 
-        array_walk($this->orders, function(Order $order, $key, &$volume) {
-            if ($order->getType() === Order::TYPE_ASK) {
+        /** @var Order $order */
+        foreach ($this->orders as $order) {
+            if ($order->isAsk()) {
                 $volume += $order->getVolume();
             }
-        }, $volume);
+        }
 
         return $volume;
     }
 
     /**
+     * Method return available volume of active without locked.
+     *
      * @return float
      */
     public function getAvailableVolume()
     {
-        return $this->volume - $this->getVolumeInOrders();
+        return $this->volume - $this->getLockedVolume();
+    }
+
+    /**
+     * @param Active $active object for comparison.
+     *
+     * @return bool
+     */
+    public function equal(Active $active)
+    {
+        $own = $this->getCurrency();
+        $other = $active->getCurrency();
+
+        if ($own && $other) {
+            return $own->equal($other);
+        }
+
+        return false;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSymbol()
+    {
+        if ($this->currency) {
+            return $this->currency->getSymbol();
+        }
+
+        return null;
+    }
+
+    /**
+     * Method for adding and calculating "sell" trade.
+     *
+     * @param Trade $trade
+     */
+    private function addSellTrade(Trade $trade)
+    {
+        if ($trade->isBaseCurrency($this->currency)) {
+            //TODO: need implement this logic.
+        } elseif ($trade->isQuoteCurrency($this->currency)) {
+            //TODO: need implement this logic.
+        } else {
+            throw new LogicException("This trade unsupported by active.");
+        }
+    }
+
+    /**
+     * Method for adding and calculating "buy" trade.
+     *
+     * @param Trade $trade
+     */
+    private function addBuyTrade(Trade $trade)
+    {
+        //TODO: need implement this logic.
     }
 }

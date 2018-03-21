@@ -78,4 +78,53 @@ class CurrencyPair
 
         return null;
     }
+
+    /**
+     * @param string $symbol
+     * @return bool
+     */
+    public function hasSymbol($symbol)
+    {
+        if (!$this->isValid()) {
+            return false;
+        }
+
+        if ($this->base->getSymbol() === $symbol || $this->quote->getSymbol() === $symbol) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isValid()
+    {
+        if ($this->base && $this->quote) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Currency $currency
+     *
+     * @return bool
+     */
+    public function isBase(Currency $currency)
+    {
+        return $this->base->equal($currency);
+    }
+
+    /**
+     * @param Currency $currency
+     *
+     * @return bool
+     */
+    public function isQuote(Currency $currency)
+    {
+        return $this->quote->equal($currency);
+    }
 }

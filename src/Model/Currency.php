@@ -50,4 +50,14 @@ class Currency
     {
         return $this->name;
     }
+
+    /**
+     * @param Currency $currency
+     *
+     * @return bool
+     */
+    public function equal(Currency $currency)
+    {
+        return $currency->getSymbol() === $this->symbol;
+    }
 }
