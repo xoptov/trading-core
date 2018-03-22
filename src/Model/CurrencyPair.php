@@ -80,6 +80,8 @@ class CurrencyPair
     }
 
     /**
+     * Method for checking symbol in this pair.
+     *
      * @param string $symbol
      * @return bool
      */
@@ -97,6 +99,8 @@ class CurrencyPair
     }
 
     /**
+     * Method for validation pair.
+     *
      * @return bool
      */
     public function isValid()
@@ -109,8 +113,9 @@ class CurrencyPair
     }
 
     /**
-     * @param Currency $currency
+     * Method for checking currency side.
      *
+     * @param Currency $currency
      * @return bool
      */
     public function isBase(Currency $currency)
@@ -119,8 +124,9 @@ class CurrencyPair
     }
 
     /**
-     * @param Currency $currency
+     * Method for checking currency side.
      *
+     * @param Currency $currency
      * @return bool
      */
     public function isQuote(Currency $currency)

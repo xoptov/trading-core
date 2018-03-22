@@ -26,6 +26,8 @@ class Balance
     }
 
     /**
+     * Method for getting actives.
+     *
      * @return SplDoublyLinkedList
      */
     public function getActives()
@@ -34,8 +36,10 @@ class Balance
     }
 
     /**
+     * Method for adding active.
+     *
      * @param Active $newActive
-     * @return bool
+     * @return boolean
      */
     public function addActive(Active $newActive)
     {
@@ -59,7 +63,7 @@ class Balance
      * Method for adding order to active.
      *
      * @param Order $order
-     * @return bool
+     * @return boolean
      */
     public function addOrder(Order $order)
     {
@@ -79,7 +83,7 @@ class Balance
      * Method for removing order object from active.
      *
      * @param Order $order
-     * @return bool
+     * @return boolean
      */
     public function removeOrder(Order $order)
     {
@@ -96,8 +100,10 @@ class Balance
     }
 
     /**
+     * Method for adding trade in actives.
+     *
      * @param Trade $trade
-     * @return bool
+     * @return boolean
      */
     public function addTrade(Trade $trade)
     {

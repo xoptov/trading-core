@@ -27,6 +27,7 @@ class Tick
 
     /**
      * Tick constructor.
+     *
      * @param CurrencyPair $currencyPair
      * @param float $last
      * @param float $lowAsk

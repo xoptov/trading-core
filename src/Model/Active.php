@@ -22,7 +22,7 @@ class Active
     private $trades;
 
     /** @var SplDoublyLinkedList */
-    private $orders = array();
+    private $orders;
 
     /** @var DeepCopy */
     private $copier;
@@ -35,12 +35,13 @@ class Active
 	 */
 	public function __construct(Currency $currency, $volume)
 	{
-	    $this->copier = new DeepCopy();
-		$this->currency = $currency;
-		$this->volume = $volume;
-		$this->trades = new SplDoublyLinkedList();
-		$this->orders = new SplDoublyLinkedList();
-	}
+        $this->currency = $currency;
+        $this->volume = $volume;
+
+        $this->trades = new SplDoublyLinkedList();
+        $this->orders = new SplDoublyLinkedList();
+        $this->copier = new DeepCopy();
+    }
 
 	/**
 	 * @return Currency
@@ -67,22 +68,30 @@ class Active
 	}
 
     /**
+     * This method must be call for base and quote currency.
+     *
      * @param Trade $trade
      */
     public function addTrade(Trade $trade)
     {
-        $this->trades->push($trade);
+        if (!$trade->hasSymbol($this->getSymbol())) {
+            throw new LogicException("This trade unsupported by active.");
+        }
 
         if ($trade->isSell()) {
-            $this->addSellTrade($trade);
+            $this->sell($trade);
         } elseif ($trade->isBuy()) {
-            $this->addBuyTrade($trade);
+            $this->buy($trade);
         } else {
-            throw new UnknownTypeException("Trade type must be set to \"sell\" or \"buy\".");
+            throw new UnknownTypeException("Trade type must be \"sell\" or \"buy\".");
         }
+
+        $this->trades->push($trade);
     }
 
     /**
+     * Method for getting copy of Trade collection.
+     *
      * @return SplDoublyLinkedList
      */
     public function getTrades()
@@ -91,6 +100,8 @@ class Active
     }
 
     /**
+     * Method
+     *
      * @param Order $newOrder
      * @return bool
      */
@@ -112,23 +123,33 @@ class Active
         return true;
     }
 
-    public function removeOrder(Order $order)
+    /**
+     * Method for remove order from collection.
+     *
+     * @param Order $removeOrder
+     * @return bool
+     */
+    public function removeOrder(Order $removeOrder)
     {
-        //TODO: need implement logic for this method.
+        foreach ($this->orders as $key => $order) {
+            if ($removeOrder->equal($order)) {
+                $this->orders->offsetUnset($key);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
-     * @return Order[]
+     * Method for retrieving copy of Order collection.
+     *
+     * @return SplDoublyLinkedList|Order[]
      */
     public function getOrders()
     {
-    	$orders = array();
-
-    	foreach ($this->orders as $order) {
-    		$orders[] = clone $order;
-	    }
-
-        return $orders;
+    	return $this->copier->copy($this->orders);
     }
 
     /**
@@ -157,12 +178,62 @@ class Active
      */
     public function getAvailableVolume()
     {
-        return $this->volume - $this->getLockedVolume();
+        return $this->getVolume() - $this->getLockedVolume();
+    }
+
+    /**
+     * Method for calculating volume of active.
+     *
+     * @return float
+     */
+    public function calculateVolume()
+    {
+        $volume = 0.0;
+
+        /** @var Trade $trade */
+        foreach ($this->trades as $trade) {
+            if ($trade->isBuy()) {
+                $this->increaseVolume($trade->getVolume());
+            } else{
+                $this->decreaseVolume($trade->getVolume());
+            }
+        }
+
+        return $volume;
+    }
+
+    /**
+     * Method for calculating average and weighted average price.
+     *
+     * @param boolean $weighted
+     * @return float
+     */
+    public function calculateAveragePrice($weighted = false)
+    {
+        $totalPrice = 0.0;
+
+        /** @var Trade $trade */
+        foreach ($this->trades as $trade) {
+            if ($trade->isBuy()) {
+                if ($weighted) {
+                    $totalPrice += $trade->getTotal();
+                } else {
+                    $totalPrice += $trade->getPrice();
+                }
+            } else {
+                if ($weighted) {
+                    $totalPrice -= $trade->getTotal();
+                } else {
+                    $totalPrice -= $trade->getPrice();
+                }
+            }
+        }
+
+        return $totalPrice / $this->getVolume();
     }
 
     /**
      * @param Active $active object for comparison.
-     *
      * @return bool
      */
     public function equal(Active $active)
@@ -178,6 +249,8 @@ class Active
     }
 
     /**
+     * Method for getting symbol of active.
+     *
      * @return null|string
      */
     public function getSymbol()
@@ -194,14 +267,12 @@ class Active
      *
      * @param Trade $trade
      */
-    private function addSellTrade(Trade $trade)
+    private function sell(Trade $trade)
     {
         if ($trade->isBaseCurrency($this->currency)) {
-            //TODO: need implement this logic.
-        } elseif ($trade->isQuoteCurrency($this->currency)) {
-            //TODO: need implement this logic.
+            $this->decreaseVolume($trade->getVolume());
         } else {
-            throw new LogicException("This trade unsupported by active.");
+            $this->increaseVolume($trade->getTotal());
         }
     }
 
@@ -210,8 +281,32 @@ class Active
      *
      * @param Trade $trade
      */
-    private function addBuyTrade(Trade $trade)
+    private function buy(Trade $trade)
     {
-        //TODO: need implement this logic.
+        if ($trade->isBaseCurrency($this->currency)) {
+            $this->increaseVolume($trade->getVolume());
+        } else {
+            $this->decreaseVolume($trade->getTotal());
+        }
+    }
+
+    /**
+     * Method for increase volume of active.
+     *
+     * @param float $value
+     */
+    private function increaseVolume($value)
+    {
+        $this->volume += $value;
+    }
+
+    /**
+     * Method for decrease volume for active.
+     *
+     * @param float $value
+     */
+    private function decreaseVolume($value)
+    {
+        $this->volume -= $value;
     }
 }
