@@ -9,19 +9,15 @@ use Xoptov\TradingCore\Exception\UnknownTypeException;
 
 class Active
 {
+    use RateTrait;
+
 	/** @var Currency */
 	private $currency;
 
-	/** @var float */
-    private $price;
-
-    /** @var float */
-    private $volume;
-
-    /** @var SplDoublyLinkedList */
+    /** @var Trade[] */
     private $trades;
 
-    /** @var SplDoublyLinkedList */
+    /** @var Order[] */
     private $orders;
 
     /** @var DeepCopy */
@@ -49,22 +45,6 @@ class Active
 	public function getCurrency()
 	{
 		return $this->currency;
-	}
-
-	/**
-	 * @return float
-	 */
-	public function getPrice()
-	{
-		return $this->price;
-	}
-
-	/**
-	 * @return float
-	 */
-	public function getVolume()
-	{
-		return $this->volume;
 	}
 
     /**
@@ -186,50 +166,86 @@ class Active
      *
      * @return float
      */
-    public function calculateVolume()
+    public function getTotalVolume()
     {
-        $volume = 0.0;
+        $total = 0.0;
 
         /** @var Trade $trade */
         foreach ($this->trades as $trade) {
             if ($trade->isBuy()) {
-                $this->increaseVolume($trade->getVolume());
+                $total += $trade->getVolume();
             } else{
-                $this->decreaseVolume($trade->getVolume());
+                $total -= $trade->getVolume();
             }
         }
 
-        return $volume;
+        return $total;
     }
 
     /**
-     * Method for calculating average and weighted average price.
+     * Method for calculating total price of active.
      *
-     * @param boolean $weighted
      * @return float
      */
-    public function calculateAveragePrice($weighted = false)
+    public function getTotalPrice()
     {
-        $totalPrice = 0.0;
+        $total = 0.0;
 
-        /** @var Trade $trade */
         foreach ($this->trades as $trade) {
             if ($trade->isBuy()) {
-                if ($weighted) {
-                    $totalPrice += $trade->getTotal();
-                } else {
-                    $totalPrice += $trade->getPrice();
-                }
+                $total += $trade->getTotal();
             } else {
-                if ($weighted) {
-                    $totalPrice -= $trade->getTotal();
-                } else {
-                    $totalPrice -= $trade->getPrice();
-                }
+                $total -= $trade->getTotal();
             }
         }
 
-        return $totalPrice / $this->getVolume();
+        return $total;
+    }
+
+    /**
+     * Method for calculating weighted average price.
+     *
+     * @return float
+     */
+    public function getWeightedAveragePrice()
+    {
+        return $this->getTotalPrice() / $this->getTotalVolume();
+    }
+
+    /**
+     * Method for calculating total buy of active.
+     *
+     * @return float
+     */
+    public function getBuyTotal()
+    {
+        $total = 0.0;
+
+        foreach ($this->trades as $trade) {
+            if ($trade->isBuy()) {
+                $total += $trade->getTotal();
+            }
+        }
+
+        return $total;
+    }
+
+    /**
+     * Method for calculating total sell of active.
+     *
+     * @return float
+     */
+    public function getSellTotal()
+    {
+        $total = 0.0;
+
+        foreach ($this->trades as $trade) {
+            if ($trade->isSell()) {
+                $total += $trade->getTotal();
+            }
+        }
+
+        return $total;
     }
 
     /**
@@ -271,6 +287,7 @@ class Active
     {
         if ($trade->isBaseCurrency($this->currency)) {
             $this->decreaseVolume($trade->getVolume());
+            $this->decreasePrice($trade->getTotal());
         } else {
             $this->increaseVolume($trade->getTotal());
         }
@@ -285,13 +302,14 @@ class Active
     {
         if ($trade->isBaseCurrency($this->currency)) {
             $this->increaseVolume($trade->getVolume());
+            $this->increasePrice($trade->getTotal());
         } else {
             $this->decreaseVolume($trade->getTotal());
         }
     }
 
     /**
-     * Method for increase volume of active.
+     * Method for increase total volume of active.
      *
      * @param float $value
      */
@@ -301,12 +319,32 @@ class Active
     }
 
     /**
-     * Method for decrease volume for active.
+     * Method for decrease total volume for active.
      *
      * @param float $value
      */
     private function decreaseVolume($value)
     {
         $this->volume -= $value;
+    }
+
+    /**
+     * Method for increase total price of active.
+     *
+     * @param $value
+     */
+    private function increasePrice($value)
+    {
+        $this->price += $value;
+    }
+
+    /**
+     * Method for decrease total price of active.
+     *
+     * @param $value
+     */
+    private function decreasePrice($value)
+    {
+        $this->price -= $value;
     }
 }

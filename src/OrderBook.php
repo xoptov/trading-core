@@ -2,7 +2,6 @@
 
 namespace Xoptov\TradingCore;
 
-use SplDoublyLinkedList;
 use Xoptov\TradingCore\Model\Rate;
 use Xoptov\TradingCore\Model\Order;
 use Xoptov\TradingCore\Model\CurrencyPair;
@@ -13,167 +12,78 @@ class OrderBook
 	/** @var CurrencyPair */
 	private $currencyPair;
 
-    /** @var SplDoublyLinkedList */
+    /** @var OrderBookSide */
     private $asks;
 
-    /** @var SplDoublyLinkedList */
+    /** @var OrderBookSide */
     private $bids;
 
 	/**
 	 * OrderBook constructor.
 	 *
 	 * @param CurrencyPair $currencyPair
+     * @param callable     $asksSorter
+     * @param callable     $bidsSorter
 	 */
-    public function __construct(CurrencyPair $currencyPair)
+    public function __construct(CurrencyPair $currencyPair, callable $asksSorter, callable $bidsSorter)
     {
     	$this->currencyPair = $currencyPair;
-        $this->asks = new SplDoublyLinkedList();
-        $this->bids = new SplDoublyLinkedList();
-    }
-
-	/**
-     * @return SplDoublyLinkedList
-     */
-    public function getAsks()
-    {
-        $asks = clone $this->asks;
-
-        return $asks;
+    	$this->asks = new OrderBookSide($asksSorter);
+        $this->bids = new OrderBookSide($bidsSorter);
     }
 
     /**
-     * @return SplDoublyLinkedList
-     */
-    public function getBids()
-    {
-        $bids = clone $this->bids;
-
-        return $bids;
-    }
-
-    /**
-     * @return Rate|null
-     */
-    public function getLowestAsk()
-    {
-        if ($this->asks->isEmpty()) {
-            return null;
-        }
-
-        /** @var Rate $lowAsk */
-        $lowAsk = $this->asks->top();
-
-        /** @var Rate $ask */
-        foreach ($this->asks as $ask) {
-            if ($ask->getPrice() < $lowAsk->getPrice()) {
-                $lowAsk = $ask;
-            }
-        }
-
-        return clone $lowAsk;
-    }
-
-    /**
-	 * @return Rate|null
-	 */
-    public function getHighestBid()
-    {
-        if ($this->bids->isEmpty()) {
-            return null;
-        }
-
-        /** @var Rate $highBid */
-        $highBid = $this->bids->top();
-
-        /** @var Rate $bid */
-        foreach ($this->bids as $bid) {
-            if ($bid->getPrice() > $highBid->getPrice()) {
-                $highBid = $bid;
-            }
-        }
-
-        return clone $highBid;
-    }
-
-    /**
+     * Method for adding rate to side.
+     *
      * @param string $type
      * @param Rate $rate
      */
     public function add($type, Rate $rate)
     {
         $side = $this->determine($type);
-
-        /** @var Rate $row */
-        foreach ($side as $row) {
-            if ($row->getPrice() === $rate->getPrice()) {
-                $rate->setVolume($row->getVolume() + $rate->getVolume());
-                break;
-            }
-        }
-
-        $side->push($rate);
+        $side->add($rate);
     }
 
     /**
+     * Method for modify rate in side.
+     *
      * @param string $type
      * @param Rate $rate
+     * @return boolean
      */
     public function modify($type, Rate $rate)
     {
         $side = $this->determine($type);
 
-        /** @var Rate $row */
-        foreach ($side as $row) {
-            if ($row->getPrice() === $rate->getPrice()) {
-                $row->setVolume($rate->getVolume());
-                break;
-            }
-        }
-
-        $side->push($rate);
+        return $side->modify($rate);
     }
 
     /**
-     * @param string $type
-     * @param float $price
-     * @return boolean
+     * Method for removing rate from side by price.
+     *
+     * @param $type
+     * @param $price
+     * @return bool
      */
     public function remove($type, $price)
     {
         $side = $this->determine($type);
 
-        /** @var Rate $row */
-        foreach ($side as $key => $row) {
-            if ($row->getPrice() === $price) {
-                $side->offsetUnset($key);
-
-                return true;
-            }
-        }
-
-        return false;
+        return $side->remove($price);
     }
 
-    public function clean()
+    /**
+     * Method for clear side collections.
+     */
+    public function clear()
     {
-        unset($this->asks);
-        $this->asks = new SplDoublyLinkedList();
-
-        unset($this->bids);
-        $this->bids = new SplDoublyLinkedList();
+        $this->asks->clear();
+        $this->bids->clear();
     }
 
-	/**
-	 * @return mixed
-	 */
-    public function getCurrencyPairId()
-    {
-    	return $this->currencyPair->getId();
-    }
-
-	/**
+    /**
 	 * @param $type
-	 * @return SplDoublyLinkedList
+	 * @return OrderBookSide
 	 */
     private function determine($type)
     {

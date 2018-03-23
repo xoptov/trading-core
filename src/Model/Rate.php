@@ -27,4 +27,13 @@ class Rate
 
 		return $this;
 	}
+
+    /**
+     * @param Rate $rate
+     * @return bool
+     */
+	public function isEqualPrice(Rate $rate)
+    {
+        return $this->price === $rate->getPrice();
+    }
 }

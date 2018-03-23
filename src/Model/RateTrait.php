@@ -33,4 +33,36 @@ trait RateTrait
     {
         return $this->price * $this->volume;
     }
+
+    /**
+     * @param float $value
+     */
+    public function increasePrice($value)
+    {
+        $this->price += $value;
+    }
+
+    /**
+     * @param float $value
+     */
+    public function decreasePrice($value)
+    {
+        $this->price -= $value;
+    }
+
+    /**
+     * @param $value
+     */
+    public function increaseVolume($value)
+    {
+        $this->volume += $value;
+    }
+
+    /**
+     * @param $value
+     */
+    public function decreaseVolume($value)
+    {
+        $this->volume -= $value;
+    }
 }
