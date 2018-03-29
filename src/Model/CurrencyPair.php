@@ -133,4 +133,32 @@ class CurrencyPair
     {
         return $this->quote->equal($currency);
     }
+
+    /**
+     * Method for retrieving symbols as array.
+     *
+     * @return array|null
+     */
+    public function getCurrencySymbols()
+    {
+        if ($this->isValid()) {
+            return [$this->getBaseSymbol(), $this->getQuoteSymbol()];
+        }
+
+        return null;
+    }
+
+    /**
+     * Method for retrieving currencies as array.
+     *
+     * @return array|null
+     */
+    public function getCurrencies()
+    {
+        if ($this->isValid()) {
+            return [$this->base, $this->quote];
+        }
+
+        return null;
+    }
 }
