@@ -307,44 +307,4 @@ class Active
             $this->decreaseVolume($trade->getTotal());
         }
     }
-
-    /**
-     * Method for increase total volume of active.
-     *
-     * @param float $value
-     */
-    private function increaseVolume($value)
-    {
-        $this->volume += $value;
-    }
-
-    /**
-     * Method for decrease total volume for active.
-     *
-     * @param float $value
-     */
-    private function decreaseVolume($value)
-    {
-        $this->volume -= $value;
-    }
-
-    /**
-     * Method for increase total price of active.
-     *
-     * @param $value
-     */
-    private function increasePrice($value)
-    {
-        $this->price += $value;
-    }
-
-    /**
-     * Method for decrease total price of active.
-     *
-     * @param $value
-     */
-    private function decreasePrice($value)
-    {
-        $this->price -= $value;
-    }
 }
