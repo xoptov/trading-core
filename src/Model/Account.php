@@ -5,10 +5,10 @@ namespace Xoptov\TradingCore\Model;
 class Account
 {
     /** @var string */
-    private $apiKey;
+    protected $apiKey;
 
     /** @var Balance */
-	private $balance;
+	protected $balance;
 
 	/**
 	 * Account constructor.

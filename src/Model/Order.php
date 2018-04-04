@@ -11,22 +11,22 @@ class Order
     use TimeTrackingTrait;
 
     /** @var int */
-    private $id;
+    protected $id;
 
     /** @var mixed */
-    private $externalId;
+    protected $externalId;
 
     const TYPE_BID = "bid";
     const TYPE_ASK = "ask";
 
     /** @var string */
-    private $type;
+    protected $type;
 
     /** @var Active */
-    private $active;
+    protected $active;
 
     /** @var Currency */
-    private $quote;
+    protected $quote;
 
     const STATUS_NEW = "new";
     const STATUS_PLACE = "placed";
@@ -34,10 +34,10 @@ class Order
     const STATUS_DONE = "done";
 
     /** @var string */
-    private $status = self::STATUS_NEW;
+    protected $status = self::STATUS_NEW;
 
     /** @var DateTime */
-    private $updatedAt;
+    protected $updatedAt;
 
     /**
      * Order constructor.

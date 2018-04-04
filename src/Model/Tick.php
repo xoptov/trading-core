@@ -5,25 +5,25 @@ namespace Xoptov\TradingCore\Model;
 class Tick
 {
     /** @var CurrencyPair */
-    private $currencyPair;
+    protected $currencyPair;
 
     /** @var float */
-    private $last;
+    protected $last;
 
     /** @var float */
-    private $lowAsk;
+    protected $lowAsk;
 
     /** @var float */
-    private $highBid;
+    protected $highBid;
 
     /** @var float */
-    private $baseVolume;
+    protected $baseVolume;
 
     /** @var float */
-    private $quoteVolume;
+    protected $quoteVolume;
 
     /** @var float */
-    private $change;
+    protected $change;
 
     /**
      * Tick constructor.

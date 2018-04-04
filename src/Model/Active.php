@@ -12,16 +12,16 @@ class Active
     use RateTrait;
 
 	/** @var Currency */
-	private $currency;
+	protected $currency;
 
     /** @var Trade[] */
-    private $trades;
+    protected $trades;
 
     /** @var Order[] */
-    private $orders;
+    protected $orders;
 
     /** @var DeepCopy */
-    private $copier;
+    protected $copier;
 
 	/**
 	 * AbstractActive constructor.

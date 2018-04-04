@@ -8,13 +8,13 @@ use SplDoublyLinkedList;
 class Balance
 {
     /** @var SplDoublyLinkedList */
-    private $actives;
+    protected $actives;
 
     /** @var DeepCopy */
-    private $copier;
+    protected $copier;
 
     /** @var bool */
-    private $loaded = false;
+    protected $loaded = false;
 
     /**
      * Balance constructor.

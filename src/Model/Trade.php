@@ -11,16 +11,16 @@ class Trade implements TradeInterface
     use TimeTrackingTrait;
 
     /** @var int */
-    private $id;
+    protected $id;
 
     /** @var mixed */
-    private $externalId;
+    protected $externalId;
 
     /** @var CurrencyPair */
-    private $currencyPair;
+    protected $currencyPair;
 
     /** @var string */
-    private $type;
+    protected $type;
 
     /**
      * AbstractTrade constructor.

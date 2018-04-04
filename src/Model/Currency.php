@@ -5,13 +5,13 @@ namespace Xoptov\TradingCore\Model;
 class Currency
 {
     /** @var int */
-    private $id;
+    protected $id;
 
     /** @var string */
-    private $symbol;
+    protected $symbol;
 
     /** @var string */
-    private $name;
+    protected $name;
 
     /**
      * Currency constructor.

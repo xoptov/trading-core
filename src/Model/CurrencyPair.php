@@ -5,13 +5,13 @@ namespace Xoptov\TradingCore\Model;
 class CurrencyPair
 {
 	/** @var mixed */
-	private $id;
+	protected $id;
 
     /** @var Currency */
-    private $base;
+    protected $base;
 
     /** @var Currency */
-    private $quote;
+    protected $quote;
 
     /**
      * CurrencyPair constructor.
