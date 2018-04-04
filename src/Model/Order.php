@@ -26,7 +26,7 @@ class Order
     private $active;
 
     /** @var Currency */
-    private $currency;
+    private $quote;
 
     const STATUS_NEW = "new";
     const STATUS_PLACE = "placed";
@@ -45,18 +45,18 @@ class Order
      * @param mixed $externalId
      * @param string $type
      * @param Active $active
-     * @param Currency $currency
+     * @param Currency $quote
      * @param float $price
      * @param float $volume
      * @param DateTime $createdAt
      */
-    public function __construct($id, $externalId, $type, Active $active, Currency $currency, $price, $volume, DateTime $createdAt)
+    public function __construct($id, $externalId, $type, Active $active, Currency $quote, $price, $volume, DateTime $createdAt)
     {
     	$this->id = $id;
     	$this->externalId = $externalId;
         $this->type = $type;
         $this->active = $active;
-        $this->currency = $currency;
+        $this->quote = $quote;
         $this->price = $price;
         $this->volume = $volume;
         $this->createdAt = $createdAt;
@@ -99,9 +99,9 @@ class Order
     /**
      * @return Currency
      */
-    public function getCurrency()
+    public function getQuote()
     {
-        return $this->currency;
+        return $this->quote;
     }
 
     /**
