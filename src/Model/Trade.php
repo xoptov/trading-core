@@ -120,7 +120,7 @@ class Trade implements TradeInterface
      */
     public function isSell()
     {
-        return Trade::TYPE_SELL === $this->type;
+        return TradeInterface::TYPE_SELL === $this->type;
     }
 
     /**
@@ -130,7 +130,7 @@ class Trade implements TradeInterface
      */
     public function isBuy()
     {
-        return Trade::TYPE_BUY === $this->type;
+        return TradeInterface::TYPE_BUY === $this->type;
     }
 
     /**
