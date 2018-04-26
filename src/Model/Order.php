@@ -10,11 +10,8 @@ class Order
 
     use TimeTrackingTrait;
 
-    /** @var int */
-    protected $id;
-
     /** @var mixed */
-    protected $externalId;
+    protected $originId;
 
     const TYPE_BID = "bid";
     const TYPE_ASK = "ask";
@@ -41,8 +38,7 @@ class Order
 
     /**
      * Order constructor.
-     * @param int $id
-     * @param mixed $externalId
+     * @param mixed $originId
      * @param string $type
      * @param Active $active
      * @param Currency $quote
@@ -50,10 +46,9 @@ class Order
      * @param float $volume
      * @param DateTime $createdAt
      */
-    public function __construct($id, $externalId, $type, Active $active, Currency $quote, $price, $volume, DateTime $createdAt)
+    public function __construct($originId, $type, Active $active, Currency $quote, $price, $volume, DateTime $createdAt)
     {
-    	$this->id = $id;
-    	$this->externalId = $externalId;
+    	$this->originId = $originId;
         $this->type = $type;
         $this->active = $active;
         $this->quote = $quote;
@@ -62,20 +57,12 @@ class Order
         $this->createdAt = $createdAt;
     }
 
-	/**
-	 * @return int
-	 */
-	public function getId()
-	{
-		return $this->id;
-	}
-
     /**
      * @return mixed
      */
-	public function getExternalId()
+	public function getOriginId()
     {
-        return $this->externalId;
+        return $this->originId;
     }
 
     /**
@@ -152,7 +139,7 @@ class Order
      */
     public function equal(Order $order)
     {
-        return $order->getExternalId() === $this->externalId;
+        return $order->getOriginId() === $this->originId;
     }
 
     /**
@@ -160,7 +147,7 @@ class Order
      */
     public function isAsk()
     {
-        return $this->type === Order::TYPE_ASK;
+        return Order::TYPE_ASK === $this->type;
     }
 
     /**
@@ -168,6 +155,6 @@ class Order
      */
     public function isBid()
     {
-        return $this->type === Order::TYPE_BID;
+        return Order::TYPE_BID === $this->type;
     }
 }

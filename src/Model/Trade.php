@@ -10,11 +10,8 @@ class Trade implements TradeInterface
 
     use TimeTrackingTrait;
 
-    /** @var int */
-    protected $id;
-
     /** @var mixed */
-    protected $externalId;
+    protected $originId;
 
     /** @var CurrencyPair */
     protected $currencyPair;
@@ -24,18 +21,16 @@ class Trade implements TradeInterface
 
     /**
      * AbstractTrade constructor.
-     * @param int $id
-     * @param mixed $externalId;
+     * @param mixed $originId;
      * @param CurrencyPair $currencyPair
      * @param string $type
      * @param string $price
      * @param string $volume
      * @param DateTime $createdAt
      */
-    public function __construct($id, $externalId, CurrencyPair $currencyPair, $type, $price, $volume, DateTime $createdAt)
+    public function __construct($originId, CurrencyPair $currencyPair, $type, $price, $volume, DateTime $createdAt)
     {
-    	$this->id = $id;
-    	$this->externalId = $externalId;
+    	$this->originId = $originId;
     	$this->currencyPair = $currencyPair;
         $this->type = $type;
         $this->price = $price;
@@ -44,19 +39,11 @@ class Trade implements TradeInterface
     }
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-		return $this->id;
-    }
-
-    /**
      * @return mixed
      */
-    public function getExternalId()
+    public function getOriginId()
     {
-        return $this->externalId;
+        return $this->originId;
     }
 
     /**
@@ -99,7 +86,7 @@ class Trade implements TradeInterface
      */
     public function equal(Trade $trade)
     {
-        return $trade->getExternalId() === $this->externalId;
+        return $trade->getOriginId() === $this->originId;
     }
 
     /**

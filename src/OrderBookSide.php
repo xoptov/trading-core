@@ -2,6 +2,7 @@
 
 namespace Xoptov\TradingCore;
 
+use DeepCopy\DeepCopy;
 use SplDoublyLinkedList;
 use Xoptov\TradingCore\Model\Rate;
 
@@ -13,6 +14,9 @@ class OrderBookSide
     /** @var callable */
     private $sorter;
 
+    /** @var DeepCopy */
+    private $copier;
+
     /**
      * OrderBookSide constructor.
      *
@@ -22,6 +26,21 @@ class OrderBookSide
     {
         $this->rates = new SplDoublyLinkedList();
         $this->sorter = $sorter;
+        $this->copier = new DeepCopy();
+    }
+
+    /**
+     * Method for retrieving all rates in side.
+     *
+     * @return Rate[]|null
+     */
+    public function getRates()
+    {
+        if ($this->rates->count()) {
+            return $this->copier->copy($this->rates);
+        }
+
+        return null;
     }
 
     /**

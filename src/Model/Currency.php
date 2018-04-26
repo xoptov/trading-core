@@ -5,7 +5,7 @@ namespace Xoptov\TradingCore\Model;
 class Currency
 {
     /** @var int */
-    protected $id;
+    protected $originId;
 
     /** @var string */
     protected $symbol;
@@ -16,23 +16,23 @@ class Currency
     /**
      * Currency constructor.
      *
-     * @param int $id
+     * @param mixed $originId
      * @param string $symbol
      * @param string $name
      */
-    public function __construct($id, $symbol, $name)
+    public function __construct($originId, $symbol, $name)
     {
-        $this->id = $id;
+        $this->originId = $originId;
         $this->symbol = $symbol;
         $this->name = $name;
     }
 
     /**
-     * @return int
+     * @return mixed
      */
-    public function getId()
+    public function getOriginId()
     {
-        return $this->id;
+        return $this->originId;
     }
 
     /**

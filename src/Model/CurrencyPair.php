@@ -5,7 +5,7 @@ namespace Xoptov\TradingCore\Model;
 class CurrencyPair
 {
 	/** @var mixed */
-	protected $id;
+	protected $originId;
 
     /** @var Currency */
     protected $base;
@@ -16,23 +16,23 @@ class CurrencyPair
     /**
      * CurrencyPair constructor.
      *
-     * @param integer $id
+     * @param mixed $originId
      * @param Currency $base
      * @param Currency $quote
      */
-    public function __construct($id, Currency $base, Currency $quote)
+    public function __construct($originId, Currency $base, Currency $quote)
     {
-    	$this->id = $id;
+    	$this->originId = $originId;
         $this->base = $base;
         $this->quote = $quote;
     }
 
-	/**
+    /**
 	 * @return mixed
 	 */
-    public function getId()
+    public function getOriginId()
     {
-    	return $this->id;
+    	return $this->originId;
     }
 
     /**
@@ -77,6 +77,16 @@ class CurrencyPair
         }
 
         return null;
+    }
+
+    /**
+     * Method for retrieving currency pair symbol.
+     *
+     * @return string
+     */
+    public function getSymbol()
+    {
+        return $this->getBaseSymbol() . $this->getQuoteSymbol();
     }
 
     /**
@@ -160,5 +170,16 @@ class CurrencyPair
         }
 
         return null;
+    }
+
+    /**
+     * Method for compare two currency pairs.
+     *
+     * @param CurrencyPair $currencyPair
+     * @return bool
+     */
+    public function equals(CurrencyPair $currencyPair)
+    {
+        return $this->getSymbol() === $currencyPair->getSymbol();
     }
 }

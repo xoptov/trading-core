@@ -34,6 +34,6 @@ class Rate
      */
 	public function isEqualPrice(Rate $rate)
     {
-        return $this->price === $rate->getPrice();
+        return $rate->getPrice() == $this->price;
     }
 }
