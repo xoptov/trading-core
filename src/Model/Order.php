@@ -13,11 +13,8 @@ class Order
     /** @var mixed */
     protected $originId;
 
-    const TYPE_BID = "bid";
-    const TYPE_ASK = "ask";
-
     /** @var string */
-    protected $type;
+    protected $side;
 
     /** @var Active */
     protected $active;
@@ -25,13 +22,8 @@ class Order
     /** @var Currency */
     protected $quote;
 
-    const STATUS_NEW = "new";
-    const STATUS_PLACE = "placed";
-    const STATUS_CANCELED = "canceled";
-    const STATUS_DONE = "done";
-
     /** @var string */
-    protected $status = self::STATUS_NEW;
+    protected $status;
 
     /** @var DateTime */
     protected $updatedAt;
@@ -39,21 +31,22 @@ class Order
     /**
      * Order constructor.
      * @param mixed $originId
-     * @param string $type
+     * @param string $side
      * @param Active $active
      * @param Currency $quote
      * @param float $price
      * @param float $volume
      * @param DateTime $createdAt
      */
-    public function __construct($originId, $type, Active $active, Currency $quote, $price, $volume, DateTime $createdAt)
+    public function __construct($originId, $side, Active $active, Currency $quote, $price, $volume, $status, DateTime $createdAt)
     {
     	$this->originId = $originId;
-        $this->type = $type;
+        $this->side = $side;
         $this->active = $active;
         $this->quote = $quote;
         $this->price = $price;
         $this->volume = $volume;
+        $this->status = $status;
         $this->createdAt = $createdAt;
     }
 
@@ -68,9 +61,9 @@ class Order
     /**
      * @return string
      */
-    public function getType()
+    public function getSide()
     {
-        return $this->type;
+        return $this->side;
     }
 
     /**
@@ -143,18 +136,11 @@ class Order
     }
 
     /**
+     * @param string $side
      * @return bool
      */
-    public function isAsk()
+    public function isSide($side)
     {
-        return Order::TYPE_ASK === $this->type;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isBid()
-    {
-        return Order::TYPE_BID === $this->type;
+        return $this->getSide() === $side;
     }
 }

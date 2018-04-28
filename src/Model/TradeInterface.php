@@ -4,13 +4,17 @@ namespace Xoptov\TradingCore\Model;
 
 interface TradeInterface
 {
-    const TYPE_BUY = "buy";
-    const TYPE_SELL = "sell";
-
     /**
      * @return string
      */
     public function getType();
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public function isType($type);
+
     /**
      * @return float
      */

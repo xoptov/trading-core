@@ -101,23 +101,12 @@ class Trade implements TradeInterface
     }
 
     /**
-     * Method return true if trade side is "sell" or return false otherwise.
-     *
+     * @param string $type
      * @return bool
      */
-    public function isSell()
+    public function isType($type)
     {
-        return TradeInterface::TYPE_SELL === $this->type;
-    }
-
-    /**
-     * Method return true if trade side is "buy" or return false otherwise.
-     *
-     * @return bool
-     */
-    public function isBuy()
-    {
-        return TradeInterface::TYPE_BUY === $this->type;
+        return $this->getType() === $type;
     }
 
     /**

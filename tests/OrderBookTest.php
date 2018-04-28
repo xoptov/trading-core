@@ -54,16 +54,16 @@ class OrderBookTest extends TestCase
 		    return 0;
         };
 
-		$orderBook = new OrderBook($currencyPair, $asksSorter, $bidsSorter);
+		$orderBook = new OrderBook($currencyPair, $asksSorter, $bidsSorter, "ASK", "BID");
 
 		foreach ($asks as $ask) {
 			$rate = new Rate($ask[0], $ask[1]);
-			$orderBook->add(Order::TYPE_ASK, $currencyPair, $rate);
+			$orderBook->add("ASK", $currencyPair, $rate);
 		}
 
 		foreach ($bids as $bid) {
 			$rate = new Rate($bid[0], $bid[1]);
-			$orderBook->add(Order::TYPE_BID, $currencyPair, $rate);
+			$orderBook->add("BID", $currencyPair, $rate);
 		}
 
 		unset($ask, $bid, $rate, $base, $quote, $bidsSorter, $asksSorter);
@@ -74,7 +74,7 @@ class OrderBookTest extends TestCase
 		$lowAsk = $orderBook->getLowestAsk();
 		$this->assertEquals($asks[4][0], $lowAsk->getPrice());
 
-		$result = $orderBook->remove(Order::TYPE_ASK, $currencyPair, 1.7261);
+		$result = $orderBook->remove("ASK", $currencyPair, 1.7261);
 		$this->assertTrue($result);
 		$this->assertCount(6, $orderBook->getAsks());
 

@@ -3,7 +3,6 @@
 namespace Xoptov\TradingCore;
 
 use Xoptov\TradingCore\Model\Rate;
-use Xoptov\TradingCore\Model\Order;
 use Xoptov\TradingCore\Model\CurrencyPair;
 use Xoptov\TradingCore\Exception\UnknownTypeException;
 use Xoptov\TradingCore\Exception\UnsupportedTypeException;
@@ -19,75 +18,97 @@ class OrderBook
     /** @var OrderBookSide */
     private $bids;
 
+    /** @var string */
+    private $sideAsk;
+
+    /** @var string */
+    private $sideBid;
+
 	/**
 	 * OrderBook constructor.
 	 *
 	 * @param CurrencyPair $currencyPair
      * @param callable     $asksSorter
      * @param callable     $bidsSorter
+     * @param string       $sideAsk
+     * @param string       $sideBid
 	 */
-    public function __construct(CurrencyPair $currencyPair, callable $asksSorter, callable $bidsSorter)
+    public function __construct(CurrencyPair $currencyPair, callable $asksSorter, callable $bidsSorter, $sideAsk, $sideBid)
     {
     	$this->currencyPair = $currencyPair;
     	$this->asks = new OrderBookSide($asksSorter);
         $this->bids = new OrderBookSide($bidsSorter);
+        $this->sideAsk = $sideAsk;
+        $this->sideBid = $sideBid;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSideAsk()
+    {
+        return $this->sideAsk;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSideBid()
+    {
+        return $this->sideBid;
     }
 
     /**
      * Method for adding rate to side.
      *
-     * @param string       $type
+     * @param string       $side
      * @param CurrencyPair $currencyPair
      * @param Rate         $rate
      * @throws UnsupportedTypeException
      */
-    public function add($type, CurrencyPair $currencyPair, Rate $rate)
+    public function add($side, CurrencyPair $currencyPair, Rate $rate)
     {
         if (!$this->currencyPair->equals($currencyPair)) {
             throw new UnsupportedTypeException("Unsupported currency pair.");
         }
-        $side = $this->determine($type);
-        $side->add($rate);
+
+        $this->determine($side)->add($rate);
     }
 
     /**
      * Method for modify rate in side.
      *
-     * @param string       $type
+     * @param string       $side
      * @param CurrencyPair $currencyPair
      * @param Rate         $rate
      * @return boolean
      * @throws UnsupportedTypeException
      */
-    public function modify($type, CurrencyPair $currencyPair, Rate $rate)
+    public function modify($side, CurrencyPair $currencyPair, Rate $rate)
     {
         if (!$this->currencyPair->equals($currencyPair)) {
             throw new UnsupportedTypeException("Unsupported currency pair.");
         }
 
-        $side = $this->determine($type);
-
-        return $side->modify($rate);
+        return $this->determine($side)->modify($rate);
     }
 
     /**
      * Method for removing rate from side by price.
      *
-     * @param string       $type
+     * @param string       $side
      * @param CurrencyPair $currencyPair
      * @param float        $price
      * @return bool
      * @throws UnsupportedTypeException
      */
-    public function remove($type, CurrencyPair $currencyPair, $price)
+    public function remove($side, CurrencyPair $currencyPair, $price)
     {
         if (!$this->currencyPair->equals($currencyPair)) {
             throw new UnsupportedTypeException("Unsupported currency pair.");
         }
 
-        $side = $this->determine($type);
-
-        return $side->remove($price);
+        return $this->determine($side)->remove($price);
     }
 
     /**
@@ -162,14 +183,14 @@ class OrderBook
     /**
      * Method for determining side by type.
      *
-	 * @param $type
+	 * @param string $side
 	 * @return OrderBookSide
 	 */
-    private function determine($type)
+    private function determine($side)
     {
-    	if (Order::TYPE_ASK === $type) {
+    	if ($this->getSideAsk() === $side) {
     		return $this->asks;
-	    } elseif (Order::TYPE_BID === $type) {
+	    } elseif ($this->getSideBid() === $side) {
     		return $this->bids;
         }
 
