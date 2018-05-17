@@ -5,19 +5,30 @@ namespace Xoptov\TradingCore\Model;
 class Account
 {
     /** @var string */
-    protected $apiKey;
+    protected $key;
 
     /** @var Balance */
 	protected $balance;
 
 	/**
 	 * Account constructor.
+     * @param string $key Key for API connection.
 	 */
-	public function __construct($apiKey)
+	public function __construct($key)
 	{
-	    $this->apiKey = $apiKey;
+	    $this->key = $key;
 		$this->balance = new Balance();
 	}
+
+    /**
+     * Method for getting key.
+     *
+     * @return string
+     */
+	public function getKey()
+    {
+        return $this->key;
+    }
 
 	/**
      * Method for getting balance.
