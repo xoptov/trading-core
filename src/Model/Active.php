@@ -23,36 +23,16 @@ class Active
     /** @var DeepCopy */
     protected $copier;
 
-    /** @var string */
-    private $sideAsk;
-
-    /** @var string */
-    private $sideBid;
-
-    /** @var string */
-    private $typeSell;
-
-    /** @var string */
-    private $typeBuy;
-
 	/**
 	 * AbstractActive constructor.
      *
 	 * @param Currency $currency
 	 * @param float    $volume
-     * @param string   $sideAsk
-     * @param string   $sideBid
-     * @param string   $typeSell
-     * @param string   $typeBuy
 	 */
-	public function __construct(Currency $currency, $volume, $sideAsk, $sideBid, $typeSell, $typeBuy)
+	public function __construct(Currency $currency, $volume)
 	{
         $this->currency = $currency;
         $this->volume = $volume;
-        $this->sideAsk = $sideAsk;
-        $this->sideBid = $sideBid;
-        $this->typeSell = $typeSell;
-        $this->typeBuy = $typeBuy;
 
         $this->trades = new SplDoublyLinkedList();
         $this->orders = new SplDoublyLinkedList();
@@ -68,38 +48,6 @@ class Active
 	}
 
     /**
-     * @return string
-     */
-	public function getSideAsk()
-    {
-        return $this->sideAsk;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSideBid()
-    {
-        return $this->sideBid;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTypeSell()
-    {
-        return $this->typeSell;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTypeBuy()
-    {
-        return $this->typeBuy;
-    }
-
-    /**
      * This method must be call for base and quote currency.
      *
      * @param Trade $trade
@@ -110,9 +58,9 @@ class Active
             throw new LogicException("This trade unsupported by active.");
         }
 
-        if ($trade->isType($this->getTypeSell())) {
+        if ($trade->isType(Trade::TYPE_SELL)) {
             $this->sell($trade);
-        } elseif ($trade->isType($this->getTypeBuy())) {
+        } elseif ($trade->isType(Trade::TYPE_BUY)) {
             $this->buy($trade);
         } else {
             throw new UnknownTypeException("Trade type must be \"sell\" or \"buy\".");
@@ -195,7 +143,7 @@ class Active
 
         /** @var Order $order */
         foreach ($this->orders as $order) {
-            if ($order->isSide($this->getSideAsk())) {
+            if ($order->isSide(Order::SIDE_ASK)) {
                 $volume += $order->getVolume();
             }
         }
@@ -224,7 +172,7 @@ class Active
 
         /** @var Trade $trade */
         foreach ($this->trades as $trade) {
-            if ($trade->isType($this->getTypeBuy())) {
+            if ($trade->isType(Trade::TYPE_BUY)) {
                 $total += $trade->getVolume();
             } else{
                 $total -= $trade->getVolume();
@@ -244,7 +192,7 @@ class Active
         $total = 0.0;
 
         foreach ($this->trades as $trade) {
-            if ($trade->isType($this->getTypeBuy())) {
+            if ($trade->isType(Trade::TYPE_BUY)) {
                 $total += $trade->getTotal();
             } else {
                 $total -= $trade->getTotal();
@@ -274,7 +222,7 @@ class Active
         $total = 0.0;
 
         foreach ($this->trades as $trade) {
-            if ($trade->isType($this->getTypeBuy())) {
+            if ($trade->isType(Trade::TYPE_BUY)) {
                 $total += $trade->getTotal();
             }
         }
@@ -292,7 +240,7 @@ class Active
         $total = 0.0;
 
         foreach ($this->trades as $trade) {
-            if ($trade->isType($this->getTypeSell())) {
+            if ($trade->isType(Trade::TYPE_SELL)) {
                 $total += $trade->getTotal();
             }
         }

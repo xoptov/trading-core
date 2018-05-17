@@ -3,6 +3,7 @@
 namespace Xoptov\TradingCore\Model;
 
 use DateTime;
+use RuntimeException;
 
 class Trade implements TradeInterface
 {
@@ -19,6 +20,15 @@ class Trade implements TradeInterface
     /** @var string */
     protected $type;
 
+    const TYPE_SELL = "sell";
+    const TYPE_BUY = "buy";
+
+    /** @var array */
+    protected $supportedTypes = array(
+        self::TYPE_SELL,
+        self::TYPE_BUY
+    );
+
     /**
      * AbstractTrade constructor.
      * @param mixed $originId;
@@ -30,6 +40,10 @@ class Trade implements TradeInterface
      */
     public function __construct($originId, CurrencyPair $currencyPair, $type, $price, $volume, DateTime $createdAt)
     {
+        if (!$this->isSupportType($type)) {
+            throw new RuntimeException("Type is not support.");
+        }
+
     	$this->originId = $originId;
     	$this->currencyPair = $currencyPair;
         $this->type = $type;
@@ -101,12 +115,25 @@ class Trade implements TradeInterface
     }
 
     /**
+     * Method for checking type.
+     *
      * @param string $type
      * @return bool
      */
     public function isType($type)
     {
         return $this->getType() === $type;
+    }
+
+    /**
+     * Method for checking supported type.
+     *
+     * @param string $type
+     * @return bool
+     */
+    public function isSupportType($type)
+    {
+        return in_array($type, $this->supportedTypes);
     }
 
     /**

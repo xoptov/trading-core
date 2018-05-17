@@ -3,6 +3,7 @@
 namespace Xoptov\TradingCore\Model;
 
 use DateTime;
+use RuntimeException;
 
 class Order
 {
@@ -12,6 +13,15 @@ class Order
 
     /** @var mixed */
     protected $originId;
+
+    const SIDE_ASK = "ask";
+    const SIDE_BID = "bid";
+
+    /** @var array */
+    protected $supportedSides = array(
+        self::SIDE_ASK,
+        self::SIDE_BID
+    );
 
     /** @var string */
     protected $side;
@@ -30,6 +40,7 @@ class Order
 
     /**
      * Order constructor.
+     *
      * @param mixed $originId
      * @param string $side
      * @param Active $active
@@ -40,6 +51,10 @@ class Order
      */
     public function __construct($originId, $side, Active $active, Currency $quote, $price, $volume, $status, DateTime $createdAt)
     {
+        if (!$this->isSupportSide($side)) {
+            throw new RuntimeException("Specified side is not supported.");
+        }
+
     	$this->originId = $originId;
         $this->side = $side;
         $this->active = $active;
@@ -136,11 +151,24 @@ class Order
     }
 
     /**
+     * Method for checking equivalent side.
+     *
      * @param string $side
      * @return bool
      */
     public function isSide($side)
     {
         return $this->getSide() === $side;
+    }
+
+    /**
+     * Method for checking support of side.
+     *
+     * @param string $side
+     * @return bool
+     */
+    public function isSupportSide($side)
+    {
+        return in_array($side, $this->supportedSides);
     }
 }

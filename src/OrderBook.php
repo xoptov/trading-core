@@ -3,6 +3,7 @@
 namespace Xoptov\TradingCore;
 
 use Xoptov\TradingCore\Model\Rate;
+use Xoptov\TradingCore\Model\Order;
 use Xoptov\TradingCore\Model\CurrencyPair;
 use Xoptov\TradingCore\Exception\UnknownTypeException;
 use Xoptov\TradingCore\Exception\UnsupportedTypeException;
@@ -18,44 +19,18 @@ class OrderBook
     /** @var OrderBookSide */
     private $bids;
 
-    /** @var string */
-    private $sideAsk;
-
-    /** @var string */
-    private $sideBid;
-
 	/**
 	 * OrderBook constructor.
 	 *
 	 * @param CurrencyPair $currencyPair
      * @param callable     $asksSorter
      * @param callable     $bidsSorter
-     * @param string       $sideAsk
-     * @param string       $sideBid
 	 */
-    public function __construct(CurrencyPair $currencyPair, callable $asksSorter, callable $bidsSorter, $sideAsk, $sideBid)
+    public function __construct(CurrencyPair $currencyPair, callable $asksSorter, callable $bidsSorter)
     {
     	$this->currencyPair = $currencyPair;
     	$this->asks = new OrderBookSide($asksSorter);
         $this->bids = new OrderBookSide($bidsSorter);
-        $this->sideAsk = $sideAsk;
-        $this->sideBid = $sideBid;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSideAsk()
-    {
-        return $this->sideAsk;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSideBid()
-    {
-        return $this->sideBid;
     }
 
     /**
@@ -188,9 +163,9 @@ class OrderBook
 	 */
     private function determine($side)
     {
-    	if ($this->getSideAsk() === $side) {
+    	if (Order::SIDE_ASK === $side) {
     		return $this->asks;
-	    } elseif ($this->getSideBid() === $side) {
+	    } elseif (Order::SIDE_BID === $side) {
     		return $this->bids;
         }
 
